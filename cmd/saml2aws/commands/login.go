@@ -41,6 +41,14 @@ func Login(loginFlags *LoginFlags) error {
 		return errors.Wrap(err, "error loading config file")
 	}
 
+	embedUrl, err := config.LoadEmbedUrl()
+	if err != nil {
+		return errors.Wrap(err, "error loading config file")
+	}
+	if embedUrl != "" {
+		loginFlags.EmbedUrl = embedUrl
+	}
+
 	// fmt.Println("LookupCredentials", hostname)
 
 	loginDetails, err := resolveLoginDetails(hostname, loginFlags)
@@ -151,6 +159,7 @@ func Login(loginFlags *LoginFlags) error {
 	fmt.Println("Saving config:", config.Filename)
 	config.SaveUsername(loginDetails.Username)
 	config.SaveHostname(loginDetails.Hostname)
+	config.SaveEmbedUrl(loginFlags.EmbedUrl)
 
 	return nil
 }

@@ -55,6 +55,31 @@ func (p *ConfigLoader) LoadUsername() (string, error) {
 	return loadConfig(filename, p.Profile, "username")
 }
 
+// SaveEmbedUrl saves the embedUrl for Okta
+func (p *ConfigLoader) SaveEmbedUrl(embedUrl string) error {
+	filename, err := p.filename()
+	if err != nil {
+		return err
+	}
+
+	return saveConfig(filename, p.Profile, "embedUrl", embedUrl)
+}
+
+// LoadEmbedUrl loads the embedUrl for Okta
+func (p *ConfigLoader) LoadEmbedUrl() (string, error) {
+	filename, err := p.filename()
+	if err != nil {
+		return "", err
+	}
+
+	err = p.ensureConfigExists()
+	if err != nil {
+		return "", err
+	}
+
+	return loadConfig(filename, p.Profile, "embedUrl")
+}
+
 // SaveHostname persist the hostname
 func (p *ConfigLoader) SaveHostname(hostname string) error {
 	filename, err := p.filename()
