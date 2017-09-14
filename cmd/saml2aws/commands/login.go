@@ -21,6 +21,7 @@ type LoginFlags struct {
 	Username   string
 	Password   string
 	RoleArn    string
+	EmbedUrl   string
 	SkipVerify bool
 	SkipPrompt bool
 }
@@ -50,7 +51,11 @@ func Login(loginFlags *LoginFlags) error {
 
 	fmt.Printf("Authenticating as %s to %s https://%s\n", loginDetails.Username, loginFlags.Provider, loginDetails.Hostname)
 
-	opts := &saml2aws.SAMLOptions{Provider: loginFlags.Provider, SkipVerify: loginFlags.SkipVerify}
+	opts := &saml2aws.SAMLOptions{
+		Provider:   loginFlags.Provider,
+		SkipVerify: loginFlags.SkipVerify,
+		EmbedUrl:   loginFlags.EmbedUrl,
+	}
 
 	provider, err := saml2aws.NewSAMLClient(opts)
 	if err != nil {

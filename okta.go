@@ -24,7 +24,8 @@ import (
 
 // OktaClient is a wrapper representing a Okta SAML client
 type OktaClient struct {
-	client *http.Client
+	client      *http.Client
+	redirectUrl string
 }
 
 // AuthRequest represents an mfa okta request
@@ -39,7 +40,7 @@ type VerifyRequest struct {
 }
 
 // NewOktaClient creates a new Okta client
-func NewOktaClient(skipVerify bool) (*OktaClient, error) {
+func NewOktaClient(skipVerify bool, embedUrl string) (*OktaClient, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: skipVerify},
 	}
@@ -56,7 +57,8 @@ func NewOktaClient(skipVerify bool) (*OktaClient, error) {
 	client := &http.Client{Transport: tr, Jar: jar}
 
 	return &OktaClient{
-		client: client,
+		client:      client,
+		redirectUrl: embedUrl,
 	}, nil
 }
 
@@ -329,16 +331,14 @@ func (oc *OktaClient) Authenticate(loginDetails *LoginDetails) (string, error) {
 	oktaSessionToken := gjson.Get(resp, "sessionToken").String()
 
 	//now call saml endpoint
-	oktaSessionRedirectURL := fmt.Sprintf("https://%s/login/sessionCookieRedirect", oktaOrgHost)
-
-	req, err = http.NewRequest("GET", oktaSessionRedirectURL, nil)
+	req, err = http.NewRequest("GET", oc.redirectUrl, nil)
 	if err != nil {
 		return samlAssertion, errors.Wrap(err, "error building authentication request")
 	}
 	q := req.URL.Query()
 	q.Add("checkAccountSetupComplete", "true")
-	q.Add("token", oktaSessionToken)
 	q.Add("redirectUrl", oktaEntryURL)
+	q.Add("sessionToken", oktaSessionToken)
 	req.URL.RawQuery = q.Encode()
 
 	res, err = oc.client.Do(req)

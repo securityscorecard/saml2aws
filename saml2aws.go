@@ -21,6 +21,7 @@ type SAMLClient interface {
 type SAMLOptions struct {
 	SkipVerify bool
 	Provider   string
+	EmbedUrl   string
 }
 
 // NewSAMLClient create a new SAML client
@@ -35,7 +36,7 @@ func NewSAMLClient(opts *SAMLOptions) (SAMLClient, error) {
 	case "JumpCloud":
 		return NewJumpCloudClient(opts.SkipVerify)
 	case "Okta":
-		return NewOktaClient(opts.SkipVerify)
+		return NewOktaClient(opts.SkipVerify, opts.EmbedUrl)
 	case "KeyCloak":
 		return NewKeyCloakClient(opts.SkipVerify)
 	default:

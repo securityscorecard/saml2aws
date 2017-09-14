@@ -53,6 +53,7 @@ func configureLoginFlags(app *kingpin.Application) *commands.LoginFlags {
 	app.Flag("password", "The password used to login.").Envar("SAML2AWS_PASSWORD").StringVar(&c.Password)
 	app.Flag("role", "The ARN of the role to assume.").StringVar(&c.RoleArn)
 	app.Flag("skip-prompt", "Skip prompting for parameters during login.").BoolVar(&c.SkipPrompt)
+	app.Flag("okta-embed-url", "AWS Embed URL from Okta.").StringVar(&c.EmbedUrl)
 
 	return c
 }
