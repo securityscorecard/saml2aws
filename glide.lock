@@ -1,5 +1,5 @@
-hash: 848f784f129d44ef88c8f0aea25e59205d6a16c172f6da53e8877439ee3c18ea
-updated: 2017-04-17T12:13:56.929136006+10:00
+hash: f4871f1e4c01fbf8ba2781cec4f24eddefbd0d26adca6ecb4f3912232e555152
+updated: 2017-12-12T14:21:55.468315-05:00
 imports:
 - name: github.com/alecthomas/kingpin
   version: d2d8a9115b36a531781f0ed3c57bcba202976150
@@ -12,7 +12,7 @@ imports:
 - name: github.com/andybalholm/cascadia
   version: 1c31af6f6c1a7b101ed05aacc7d8a738b43ae86e
 - name: github.com/aws/aws-sdk-go
-  version: 2c129c11a732646f1411de34ad4833f50503f344
+  version: 32f50a06b82225ea99d3c400c20cba02874f0db7
   subpackages:
   - aws
   - aws/awserr
@@ -26,10 +26,11 @@ imports:
   - aws/credentials/stscreds
   - aws/defaults
   - aws/ec2metadata
+  - aws/endpoints
   - aws/request
   - aws/session
   - aws/signer/v4
-  - private/endpoints
+  - internal/shareddefaults
   - private/protocol
   - private/protocol/query
   - private/protocol/query/queryutil
@@ -46,8 +47,14 @@ imports:
   version: 26c6e1184fd5255fa5f5289d0b789a4819c203a4
 - name: github.com/jmespath/go-jmespath
   version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+- name: github.com/juju/go4
+  version: 40d72ab9641a2a8c36a9c46a51e28367115c8e59
+  subpackages:
+  - lock
+- name: github.com/juju/persistent-cookiejar
+  version: d5e5a8405ef9633c84af42fbcc734ec8dd73c198
 - name: github.com/pkg/errors
-  version: 17b591df37844cde689f4d5813e5cea0927d8dd2
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/PuerkitoBio/goquery
   version: 152b1a2c8f5d0340f658bb656032a39b94e52958
 - name: github.com/segmentio/go-prompt
@@ -62,17 +69,21 @@ imports:
   - md4
   - ssh/terminal
 - name: golang.org/x/net
-  version: cfe3c2a7525b50c3d707256e371c90938cfef98a
+  version: 5d0a0f8cd486626821d2ba44d471ab1c9271d38f
   subpackages:
   - html
   - html/atom
   - publicsuffix
 - name: golang.org/x/sys
-  version: 30de6d19a3bd89a5f38ae4028e23aaa5582648af
+  version: b776ec39b3e54652e09028aaaaac9757f4f8211a
   subpackages:
   - unix
+- name: gopkg.in/errgo.v1
+  version: 442357a80af5c6bf9b6d51ae791a39c3421004f3
 - name: gopkg.in/ini.v1
   version: 6e4869b434bd001f6983749881c7ead3545887d8
+- name: gopkg.in/retry.v1
+  version: 01631078ef2fdce601e38cfe5f527fab24c9a6d2
 testImports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
@@ -83,6 +94,6 @@ testImports:
   subpackages:
   - difflib
 - name: github.com/stretchr/testify
-  version: d77da356e56a7428ad25149ca77381849a6a5232
+  version: 6cb3b85ef5a0efef77caef88363ec4d4b5c0976d
   subpackages:
   - assert

@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"html"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"net/http/cookiejar"
 	"net/url"
 	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/juju/persistent-cookiejar"
 	"github.com/pkg/errors"
 	prompt "github.com/segmentio/go-prompt"
 	"github.com/tidwall/gjson"
@@ -25,6 +26,7 @@ import (
 // OktaClient is a wrapper representing a Okta SAML client
 type OktaClient struct {
 	client      *http.Client
+	jar         *cookiejar.Jar
 	redirectUrl string
 }
 
@@ -56,10 +58,13 @@ func NewOktaClient(skipVerify bool, embedUrl string) (*OktaClient, error) {
 
 	client := &http.Client{Transport: tr, Jar: jar}
 
-	return &OktaClient{
+	oc := OktaClient{
 		client:      client,
+		jar:         jar,
 		redirectUrl: embedUrl,
-	}, nil
+	}
+
+	return &oc, nil
 }
 
 // Authenticate logs into Okta and returns a SAML response
@@ -309,7 +314,7 @@ func (oc *OktaClient) Authenticate(loginDetails *LoginDetails) (string, error) {
 		verifyBody = new(bytes.Buffer)
 		json.NewEncoder(verifyBody).Encode(verifyReq)
 
-		req, err = http.NewRequest("POST", oktaVerify, verifyBody)
+		req, err = http.NewRequest("POST", oktaVerify+"?rememberDevice=true", verifyBody)
 		if err != nil {
 			return samlAssertion, errors.Wrap(err, "error building verify request")
 		}
@@ -357,5 +362,14 @@ func (oc *OktaClient) Authenticate(loginDetails *LoginDetails) (string, error) {
 		return samlAssertion, errors.Wrap(err, "unable to locate saml response")
 	}
 
+	err = oc.saveCookies()
+	if err != nil {
+		log.Println(err)
+	}
+
 	return samlAssertion, nil
+}
+
+func (oc *OktaClient) saveCookies() error {
+	return oc.jar.Save()
 }

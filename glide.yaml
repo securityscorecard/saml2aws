@@ -19,6 +19,7 @@ import:
 - package: github.com/segmentio/go-prompt
 - package: github.com/Azure/go-ntlmssp
 - package: github.com/tidwall/gjson
+- package: github.com/juju/persistent-cookiejar
 testImport:
 - package: github.com/stretchr/testify
   subpackages:
